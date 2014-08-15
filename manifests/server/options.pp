@@ -5,6 +5,9 @@
 # Parameters:
 #  $forwarders:
 #   Array of forwarders IP addresses. Default: empty
+# $forward_only:
+#   if set to true, the option 'forward only' will be set, resulting in
+#   recursive queries being sent to the forwarders. Default: false
 # $group:
 #   Group of the file. Default: bind
 # $owner:
@@ -17,6 +20,7 @@
 #
 define dns::server::options(
   $forwarders = [],
+  $forward_only = false,
   $allow_recursion = [],
   $check_names_master = undef,
   $check_names_slave = undef,
@@ -30,6 +34,7 @@ define dns::server::options(
   }
 
   validate_array($forwarders)
+  validate_bool($forward_only)
   validate_array($allow_recursion)
   if $check_names_master != undef and !member($valid_check_names, $check_names_master) {
     fail("The check name policy check_names_master must be ${valid_check_names}")
