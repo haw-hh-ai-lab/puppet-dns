@@ -48,6 +48,7 @@ define dns::server::options(
   $check_names_master = undef,
   $check_names_slave = undef,
   $check_names_response = undef,
+  $dnssec_validation = 'auto',
   $allow_query = [],
 ) {
   $valid_check_names = ['fail', 'warn', 'ignore']
@@ -67,6 +68,9 @@ define dns::server::options(
   }
   if $check_names_response != undef and !member($valid_check_names, $check_names_response) {
     fail("The check name policy check_names_response must be ${valid_check_names}")
+  }
+  if !member(['auto', 'yes','no'], $dnssec_validation) {
+    fail('The dnssec_validation option must be set to either auto, yes or no')
   }
   validate_array($allow_query)
 

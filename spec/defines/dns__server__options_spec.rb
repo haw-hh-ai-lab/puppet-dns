@@ -140,5 +140,34 @@ describe 'dns::server::options', :type => :define do
 
   end
 
+  context 'dnssec_validation not set' do 
+    it { should contain_file('/etc/bind/named.conf.options').with_content(/dnssec-validation auto;/)  }
+  end
+
+  context 'activating dnssec_validation' do 
+    let :params do
+      { :dnssec_validation => 'yes' }
+    end
+
+    it { should contain_file('/etc/bind/named.conf.options').with_content(/dnssec-validation yes;/)  }
+  end
+
+  context 'deactivating dnssec_validation' do 
+    let :params do
+      { :dnssec_validation => 'no' }
+    end
+
+    it { should contain_file('/etc/bind/named.conf.options').with_content(/dnssec-validation no;/)  }
+  end
+
+  context 'passing arbitrary string to dnssec_validation' do 
+    let :params do
+      { :dnssec_validation => 'foobar' }
+    end
+
+    it { should raise_error(Puppet::Error, /The dnssec_validation option must be set to either auto, yes or no/) }
+    
+  end
+
 end
 
