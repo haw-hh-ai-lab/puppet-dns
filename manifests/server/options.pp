@@ -43,7 +43,7 @@
 #    forwarders => [ '8.8.8.8', '8.8.4.4' ],
 #   }
 #
-define dns::server::options(
+define dns::server::options (
   $forwarders = [],
   $forward_only = false,
   $listen_on = [],
@@ -57,6 +57,7 @@ define dns::server::options(
 ) {
   $valid_check_names = ['fail', 'warn', 'ignore']
   $valid_ipv6_listen_ifs = ['none', 'any']
+  $cfg_dir = $::dns::server::params::cfg_dir
 
   if ! defined(Class['::dns::server']) {
     fail('You must include the ::dns::server base class before using any dns options defined resources')
@@ -85,7 +86,7 @@ define dns::server::options(
     owner   => $::dns::server::params::owner,
     group   => $::dns::server::params::group,
     mode    => '0644',
-    require => [File[$::dns::server::params::cfg_dir], Class['::dns::server::install']],
+    require => [File[$cfg_dir], Class['::dns::server::install']],
     content => template("${module_name}/named.conf.options.erb"),
     notify  => Class['dns::server::service'],
   }
