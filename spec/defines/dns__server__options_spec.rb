@@ -32,6 +32,13 @@ describe 'dns::server::options', :type => :define do
 
   end
 
+  context 'passing boolean true to forward_only' do
+    let :params do
+      { :forward_only => true }
+    end
+    it { should contain_file('/etc/bind/named.conf.options').with_content(/forward only;$/)  }
+  end
+
   context 'passing valid array to listen_on' do
     let :params do
       { :listen_on => [ '10.11.12.13', '192.168.1.2' ] }
